@@ -1,13 +1,145 @@
-version: "2"
+version: 2
+
+sphinx:
+  configuration: docs/conf.py
 
 build:
-  os: "ubuntu-22.04"
+  os: ubuntu-22.04
   tools:
-    python: "3.10"
+    python: "3.9"
+    nodejs: "16"
+
+formats:
+  - pdf
+  - epub
 
 python:
   install:
     - requirements: docs/requirements.txt
 
-sphinx:
-  configuration: docs/source/conf.py
+submodules:
+  include: true
+
+requirements_file: docs/requirements.txt
+
+mkdocs:
+  configuration: mkdocs.yml
+
+environment:
+  - NODE_VERSION=16
+  - PYTHON_VERSION=3.9
+
+conda:
+  file: docs/environment.yml
+
+metadata:
+  name: Project Setup Instructions - Basit
+  description: Documentation for setting up and running the project
+
+# Custom Steps
+steps:
+  - title: Prerequisites
+    content: |
+      Before you begin, you need to have:
+      - [Node.js](https://nodejs.org/en/)
+      - [Python](https://www.python.org/downloads/)
+
+  - title: Project Setup
+    content: |
+      **Note:** The following commands are for Windows. The commands for macOS may differ.
+
+      ### Backend
+      1. Clone the repository
+      2. Navigate to backend and start a virtual environment:
+         ```sh
+         python -m venv venv
+         cd backend
+         ```
+      3. Activate the virtual environment:
+         ```sh
+         .\venv\Scripts\activate
+         ```
+      4. Install requirements:
+         ```sh
+         pip install -r requirements.txt
+         ```
+      5. Set up the database:
+         ```sh
+         python manage.py makemigrations
+         python manage.py migrate
+         ```
+      6. Start the backend server:
+         ```sh
+         python manage.py runserver
+         ```
+
+      ### Frontend
+      1. Split terminal and start virtual environment:
+         ```sh
+         .\venv\Scripts\activate
+         ```
+      2. Change to the frontend and install dependencies:
+         ```sh
+         cd ../frontend
+         npm install
+         ```
+      3. Start the frontend server:
+         ```sh
+         npm run dev
+         ```
+      4. Control + Click the frontend link to access the app.
+
+  - title: Application Structure
+    content: |
+      ## Backend
+      **Database**: Django ORM allows defining database objects and constraints in `models.py` without explicit SQL.
+
+      **Serializers**: Convert data between Django (Python) and React (JavaScript).
+
+      **Views**: Handle requests from the frontend, process data, and send responses.
+
+      **URLs (urls.py)**: Matches user requests to corresponding views.
+
+      ## Frontend
+      **constants.js**: Defines reusable fixed values.
+
+      **Components**: Reusable UI elements.
+
+      **Pages**: Built using components.
+
+      **Styles**: Contains CSS files.
+
+      **api.js**: Sets up API requests and authentication.
+
+      **App.jsx**: Defines app structure and navigation.
+
+      **Main.jsx**: Wrapper component.
+
+  - title: Flow of App
+    content: |
+      1. **User Login:**
+         - User enters credentials into Form Component.
+         - Form sends data to `/api/token/`.
+
+      2. **API Request & Validation:**
+         - `urls.py` routes request to `TokenObtainPairView`.
+         - If credentials match, tokens are returned.
+
+      3. **Token Handling:**
+         - Tokens are stored in localStorage.
+         - User navigates to `/`.
+
+      4. **Rendering Protected Pages:**
+         - `App.jsx` renders the home page only if tokens are valid.
+
+  - title: Git Instructions
+    content: |
+      **Check User Requirements:**
+      - Refer to Jira project pages.
+
+      **Branching:**
+      - Create a branch named after the feature.
+      - Merge after group review.
+
+      **Issue Tracking:**
+      - Add new issues to Jira backlog for weekly review.
